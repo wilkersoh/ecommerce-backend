@@ -1,0 +1,40 @@
+{
+  "name": "ecommerce-backend",
+  "private": true,
+  "version": "0.1.0",
+  "description": "A Strapi application",
+  "scripts": {
+    "dev": "strapi develop",
+    "start": "strapi start",
+    "build": "strapi build",
+    "strapi": "strapi"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "knex": "<0.20.0",
+    "sqlite3": "latest",
+    "strapi": "3.4.0",
+    "strapi-admin": "3.4.0",
+    "strapi-connector-bookshelf": "3.4.0",
+    "strapi-plugin-content-manager": "3.4.0",
+    "strapi-plugin-content-type-builder": "3.4.0",
+    "strapi-plugin-email": "3.4.0",
+    "strapi-plugin-magic": "^0.3.2",
+    "strapi-plugin-upload": "3.4.0",
+    "strapi-plugin-users-permissions": "3.4.0",
+    "strapi-provider-upload-aws-s3": "^3.4.1",
+    "strapi-utils": "3.4.0",
+    "stripe": "^8.129.0"
+  },
+  "author": {
+    "name": "A Strapi developer"
+  },
+  "strapi": {
+    "uuid": "7588d2e4-bf6b-4d9f-9482-3bb126657b7a"
+  },
+  "engines": {
+    "node": ">=10.16.0 <=14.x.x",
+    "npm": ">=6.0.0"
+  },
+  "license": "MIT"
+}
