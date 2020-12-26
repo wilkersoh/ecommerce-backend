@@ -1,6 +1,7 @@
 "use strict";
 const { sanitizeEntity } = require("strapi-utils");
 const stripe = require("stripe")(process.env.STRIPE_SK);
+const { uuid } = require("uuidv4");
 
 /**
  * Given a dollar amount, return the amount in cents
@@ -54,6 +55,7 @@ module.exports = {
    * @param {any} ctx
    */
   async create(ctx) {
+    // product = [{productA}, {productB}]
     const { product, quantity } = ctx.request.body;
     const orderQuantity = parseInt(quantity.value);
 
@@ -63,6 +65,7 @@ module.exports = {
     const realProduct = await strapi.services.product.findOne({
       id: product.id,
     });
+
     if (!realProduct) {
       return ctx.throw(404, "No product with such id");
     }
@@ -76,28 +79,61 @@ module.exports = {
       success_url: `${BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: BASE_URL,
       line_items: [
+        // realProduct = [{id, name}, {id, name}]
+        // {
+        //   price_data: {
+        //     currency: "MYR",
+        //     product_data: {
+        //       name: realProduct.name,
+        //     },
+        //     unit_amount: fromDecimalToInt(realProduct.price),
+        //   },
+        //   quantity: orderQuantity,
+        // },
         {
           price_data: {
             currency: "MYR",
             product_data: {
-              name: realProduct.name,
+              name: "BirdEgg",
             },
-            unit_amount: fromDecimalToInt(realProduct.price),
+            unit_amount: fromDecimalToInt(29.9),
           },
-          quantity: orderQuantity,
+          quantity: 2,
+        },
+        {
+          price_data: {
+            currency: "MYR",
+            product_data: {
+              name: "The Complete Strapi Course",
+            },
+            unit_amount: fromDecimalToInt(12.9),
+          },
+          quantity: 2,
         },
       ],
     });
 
+    // get id after make payment
+    const trackID = uuid();
+
     // Create the order in order strapi
-    await strapi.services.order.create({
-      user: user.id,
-      status: "unpaid",
-      total: realProduct.price * orderQuantity,
-      checkout_session: session.id,
-      product: realProduct.id,
-      quantity: orderQuantity,
-    });
+    // await strapi.services.order.create({
+    //   user: user.id,
+    //   status: "unpaid",
+    //   total: realProduct.price * orderQuantity,
+    //   checkout_session: session.id,
+    //   product: realProduct.id,
+    //   quantity: orderQuantity,
+    //   trackID,
+    // });
+
+    if (Array.isArray(ctx.request.body)) {
+      // wait until all promises are resolved
+      // await Promise.all(ctx.request.body.map(strapi.services.order.create));
+      console.log("array of content created");
+    } else {
+      // strapi.services.order.create(ctx.request.body);
+    }
 
     return { id: session.id };
   },

@@ -35,6 +35,9 @@
     },
     "quantity": {
       "type": "integer"
+    },
+    "trackID": {
+      "type": "uid"
     }
   }
 }

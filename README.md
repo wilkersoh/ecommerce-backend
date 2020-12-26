@@ -106,3 +106,4 @@ How i started from:
 48. Uncheck *Block all public access*, then it able to file upload
 49. Click top bar name - security credentials - create access keys
 50. access key id and secret
+51. yarn add uuidv4 in backend for order tracking id
