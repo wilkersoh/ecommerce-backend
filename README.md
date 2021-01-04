@@ -67,7 +67,7 @@ How i started from:
 11. Kill server and restart
 12. Copy magic secret key to store in strapi Admin
 13. Added folder for permissions
-14. Added one line code in line 5 (check top details)
+14. Added one line code in line 5 (check top details) (making authenticated request to strapi)
 15. Test Api with JWT token - http://localhost:1337/products
 16. After Test with Auth user, auth user will be added into User Collection.
 17. Create Order Collection
