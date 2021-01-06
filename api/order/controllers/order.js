@@ -21,19 +21,19 @@ module.exports = {
    */
   async find(ctx) {
     const { user } = ctx.state; // this is the magic user
+    console.log("hit orders collection");
     let entities;
     if (ctx.query._q) {
       entities = await strapi.services.order.search({
-        ...ctx.query,
+        ...ctx.query, // {}
         user: user.id,
       });
     } else {
       entities = await strapi.services.order.find({
-        ...ctx.query,
+        ...ctx.query, // {}
         user: user.id,
       });
     }
-
     return entities.map((entity) =>
       sanitizeEntity(entity, { model: strapi.models.order })
     );
@@ -79,37 +79,36 @@ module.exports = {
       success_url: `${BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: BASE_URL,
       line_items: [
-        // realProduct = [{id, name}, {id, name}]
+        {
+          price_data: {
+            currency: "MYR",
+            product_data: {
+              name: realProduct.name,
+            },
+            unit_amount: fromDecimalToInt(realProduct.price),
+          },
+          quantity: orderQuantity,
+        },
         // {
         //   price_data: {
         //     currency: "MYR",
         //     product_data: {
-        //       name: realProduct.name,
+        //       name: "BirdEgg",
         //     },
-        //     unit_amount: fromDecimalToInt(realProduct.price),
+        //     unit_amount: fromDecimalToInt(29.9),
         //   },
-        //   quantity: orderQuantity,
+        //   quantity: 2,
         // },
-        {
-          price_data: {
-            currency: "MYR",
-            product_data: {
-              name: "BirdEgg",
-            },
-            unit_amount: fromDecimalToInt(29.9),
-          },
-          quantity: 2,
-        },
-        {
-          price_data: {
-            currency: "MYR",
-            product_data: {
-              name: "The Complete Strapi Course",
-            },
-            unit_amount: fromDecimalToInt(12.9),
-          },
-          quantity: 2,
-        },
+        // {
+        //   price_data: {
+        //     currency: "MYR",
+        //     product_data: {
+        //       name: "The Complete Strapi Course",
+        //     },
+        //     unit_amount: fromDecimalToInt(12.9),
+        //   },
+        //   quantity: 2,
+        // },
       ],
     });
 
@@ -130,7 +129,6 @@ module.exports = {
     if (Array.isArray(ctx.request.body)) {
       // wait until all promises are resolved
       // await Promise.all(ctx.request.body.map(strapi.services.order.create));
-      console.log("array of content created");
     } else {
       // strapi.services.order.create(ctx.request.body);
     }

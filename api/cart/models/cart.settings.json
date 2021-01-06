@@ -12,11 +12,12 @@
   },
   "attributes": {
     "product": {
-      "via": "carts",
-      "model": "product"
+      "model": "product",
+      "via": "carts"
     },
     "isChecked": {
-      "type": "boolean"
+      "type": "boolean",
+      "default": false
     },
     "quantity": {
       "type": "integer"

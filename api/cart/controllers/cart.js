@@ -1,5 +1,5 @@
 "use strict";
-const { parseMultipartData, sanitizeEntity } = require("strapi-utils");
+const { sanitizeEntity } = require("strapi-utils");
 
 /**
  * Read the documentation (https://strapi.io/documentation/v3.x/concepts/controllers.html#core-controllers)
@@ -54,24 +54,29 @@ module.exports = {
     return sanitizeEntity(entity, { model: strapi.models.cart });
   },
   async update(ctx) {
-    const { id } = ctx.params;
-    const payload = ctx.request.body;
-
     let entity;
     try {
-      if (ctx.is("multipart")) {
-        // const { data, files } = parseMultipartData(ctx);
-        // entity = await strapi.services.cart.update({ id }, data, {
-        //   files,
-        // });
-        console.log("hit is multpart");
-      } else {
-        entity = await strapi.services.cart.update({ id }, ...payload);
-      }
+      entity = await Promise.all(
+        ctx.request.body.map((cart) => {
+          const { id, ...payload } = cart;
+          return strapi.services.cart.update({ id }, payload);
+        })
+      );
     } catch (error) {
       throw new Error(error);
     }
 
     return sanitizeEntity(entity, { model: strapi.models.cart });
+  },
+  async delete(ctx) {
+    const { id } = ctx.params;
+
+    try {
+      const entity = await strapi.services.cart.delete({ id });
+      console.log("delete");
+      return sanitizeEntity(entity, { model: strapi.models.cart });
+    } catch (error) {
+      throw new Error(error);
+    }
   },
 };
