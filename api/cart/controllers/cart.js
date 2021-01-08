@@ -73,7 +73,7 @@ module.exports = {
 
     try {
       const entity = await strapi.services.cart.delete({ id });
-      console.log("delete");
+
       return sanitizeEntity(entity, { model: strapi.models.cart });
     } catch (error) {
       throw new Error(error);
