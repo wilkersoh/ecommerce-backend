@@ -25,8 +25,8 @@
       "type": "string"
     },
     "product": {
-      "via": "orders",
-      "model": "product"
+      "model": "product",
+      "via": "orders"
     },
     "user": {
       "plugin": "users-permissions",
@@ -37,7 +37,11 @@
       "type": "integer"
     },
     "trackID": {
-      "type": "uid"
+      "type": "string",
+      "unique": false
+    },
+    "shipping": {
+      "type": "text"
     }
   }
 }

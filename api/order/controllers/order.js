@@ -1,13 +1,18 @@
 "use strict";
 const { sanitizeEntity } = require("strapi-utils");
 const stripe = require("stripe")(process.env.STRIPE_SK);
-const { uuid } = require("uuidv4");
+const { v4: uuidv4 } = require("uuid");
 
 /**
  * Given a dollar amount, return the amount in cents
  * @param {number} number
  */
 const fromDecimalToInt = (number) => parseInt(number * 100);
+
+const getCartQuantity = (items, name) => {
+  const cartItem = items.find((item) => item.product.name == name);
+  return cartItem.quantity;
+};
 
 /**
  * Read the documentation (https://strapi.io/documentation/v3.x/concepts/controllers.html#core-controllers)
@@ -21,7 +26,7 @@ module.exports = {
    */
   async find(ctx) {
     const { user } = ctx.state; // this is the magic user
-    console.log("hit orders collection");
+
     let entities;
     if (ctx.query._q) {
       entities = await strapi.services.order.search({
@@ -55,85 +60,63 @@ module.exports = {
    * @param {any} ctx
    */
   async create(ctx) {
-    // product = [{productA}, {productB}]
-    const { product, quantity } = ctx.request.body;
-    const orderQuantity = parseInt(quantity.value);
-
-    if (!product) {
-      return ctx.throw(400, "Please specify a product");
-    }
-    const realProduct = await strapi.services.product.findOne({
-      id: product.id,
+    const products = await strapi.query("product").find({
+      id_in: ctx.request.body.map((cart) => {
+        return cart.product.id;
+      }),
     });
 
-    if (!realProduct) {
-      return ctx.throw(404, "No product with such id");
-    }
+    if (!products.length) return ctx.throw(404, "No product with such id");
 
     const { user } = ctx.state;
     const BASE_URL = ctx.request.header.origin || "http://localhost:3000";
+    const cartItems = products.map((product) => {
+      const quantity = getCartQuantity(ctx.request.body, product.name);
+      return {
+        price_data: {
+          currency: "MYR",
+          product_data: {
+            name: product.name,
+          },
+          unit_amount: fromDecimalToInt(product.price),
+        },
+        quantity,
+      };
+    });
+
     const session = await stripe.checkout.sessions.create({
+      billing_address_collection: "required",
+      shipping_address_collection: {
+        allowed_countries: ["MY"],
+      },
       payment_method_types: ["card"],
       customer_email: user.email,
       mode: "payment",
       success_url: `${BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: BASE_URL,
-      line_items: [
-        {
-          price_data: {
-            currency: "MYR",
-            product_data: {
-              name: realProduct.name,
-            },
-            unit_amount: fromDecimalToInt(realProduct.price),
-          },
-          quantity: orderQuantity,
-        },
-        // {
-        //   price_data: {
-        //     currency: "MYR",
-        //     product_data: {
-        //       name: "BirdEgg",
-        //     },
-        //     unit_amount: fromDecimalToInt(29.9),
-        //   },
-        //   quantity: 2,
-        // },
-        // {
-        //   price_data: {
-        //     currency: "MYR",
-        //     product_data: {
-        //       name: "The Complete Strapi Course",
-        //     },
-        //     unit_amount: fromDecimalToInt(12.9),
-        //   },
-        //   quantity: 2,
-        // },
-      ],
+      line_items: [...cartItems],
     });
+    const trackID = uuidv4();
 
-    // get id after make payment
-    const trackID = uuid();
+    try {
+      await Promise.all(
+        ctx.request.body.map((cart) => {
+          return strapi.services.order.create({
+            user: user.id,
+            status: "unpaid",
+            total: (cart.product.price * parseInt(cart.quantity)).toFixed(2),
+            checkout_session: session.id,
+            product: cart.product.id,
+            quantity: cart.quantity,
+            trackID,
+          });
+        })
+      );
 
-    // Create the order in order strapi
-    // await strapi.services.order.create({
-    //   user: user.id,
-    //   status: "unpaid",
-    //   total: realProduct.price * orderQuantity,
-    //   checkout_session: session.id,
-    //   product: realProduct.id,
-    //   quantity: orderQuantity,
-    //   trackID,
-    // });
-
-    if (Array.isArray(ctx.request.body)) {
-      // wait until all promises are resolved
-      // await Promise.all(ctx.request.body.map(strapi.services.order.create));
-    } else {
-      // strapi.services.order.create(ctx.request.body);
+      return { id: session.id };
+    } catch (error) {
+      throw new Error("Failed to save in database in orders");
     }
-
-    return { id: session.id };
   },
   /**
    *  Given a checkout_session, verifies payment and update the order
@@ -141,17 +124,28 @@ module.exports = {
    */
   async confirm(ctx) {
     const { checkout_session } = ctx.request.body;
+    // const session = await stripe.checkout.sessions.retrieve(checkout_session, {
+    //   expand: ["line_items"],
+    // });
     const session = await stripe.checkout.sessions.retrieve(checkout_session);
 
     if (session.payment_status === "paid") {
-      const updateOrder = await strapi.services.order.update(
-        {
-          checkout_session,
-        },
-        {
-          status: "paid",
-        }
+      const orders = await strapi.services.order.find({
+        checkout_session: checkout_session,
+      });
+
+      const updateOrder = await Promise.all(
+        orders.map((order) => {
+          return strapi.services.order.update(
+            { id: order.id },
+            {
+              shipping: JSON.stringify(session.shipping),
+              status: "paid",
+            }
+          );
+        })
       );
+
       return sanitizeEntity(updateOrder, { model: strapi.models.order });
     } else {
       ctx.throw(400, "The payment wasn't sucesful, please call support");
