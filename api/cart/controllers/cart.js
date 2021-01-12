@@ -70,11 +70,25 @@ module.exports = {
   },
   async delete(ctx) {
     const { id } = ctx.params;
-
     try {
       const entity = await strapi.services.cart.delete({ id });
-
       return sanitizeEntity(entity, { model: strapi.models.cart });
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+  async deletes(ctx) {
+    const { user } = ctx.state;
+    try {
+      let entities = await strapi.services.cart.find({
+        ...ctx.query,
+        user: user.id,
+      });
+      const removeCart = await Promise.all(
+        entities.map((cart) => strapi.services.cart.delete({ id: cart.id }))
+      );
+
+      return sanitizeEntity(removeCart, { model: strapi.models.cart });
     } catch (error) {
       throw new Error(error);
     }

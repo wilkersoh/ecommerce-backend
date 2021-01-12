@@ -47,6 +47,14 @@
       "config": {
         "policies": []
       }
+    },
+    {
+      "method": "POST",
+      "path": "/carts/deletes",
+      "handler": "cart.deletes",
+      "config": {
+        "policies": []
+      }
     }
   ]
 }

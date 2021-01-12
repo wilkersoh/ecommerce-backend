@@ -15,10 +15,6 @@
       "model": "product",
       "via": "carts"
     },
-    "isChecked": {
-      "type": "boolean",
-      "default": false
-    },
     "quantity": {
       "type": "integer"
     },
