@@ -124,16 +124,12 @@ module.exports = {
    */
   async confirm(ctx) {
     const { checkout_session } = ctx.request.body;
-    // const session = await stripe.checkout.sessions.retrieve(checkout_session, {
-    //   expand: ["line_items"],
-    // });
     const session = await stripe.checkout.sessions.retrieve(checkout_session);
 
     if (session.payment_status === "paid") {
       const orders = await strapi.services.order.find({
         checkout_session: checkout_session,
       });
-
       const updateOrder = await Promise.all(
         orders.map((order) => {
           return strapi.services.order.update(
@@ -145,7 +141,6 @@ module.exports = {
           );
         })
       );
-
       return sanitizeEntity(updateOrder, { model: strapi.models.order });
     } else {
       ctx.throw(400, "The payment wasn't sucesful, please call support");
