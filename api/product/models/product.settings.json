@@ -42,15 +42,23 @@
       "targetField": "name"
     },
     "orders": {
-      "via": "product",
-      "collection": "order"
+      "collection": "order",
+      "via": "product"
     },
     "carts": {
-      "via": "product",
-      "collection": "cart"
+      "collection": "cart",
+      "via": "product"
     },
     "store": {
       "type": "biginteger"
+    },
+    "category": {
+      "via": "products",
+      "model": "category"
+    },
+    "tags": {
+      "via": "products",
+      "collection": "tag"
     }
   }
 }
