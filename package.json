@@ -13,6 +13,7 @@
   "devDependencies": {},
   "dependencies": {
     "knex": "<0.20.0",
+    "mysql": "^2.18.1",
     "sqlite3": "latest",
     "strapi": "3.4.0",
     "strapi-admin": "3.4.0",

@@ -15,8 +15,8 @@
       "type": "string"
     },
     "products": {
-      "collection": "product",
       "via": "tags",
+      "collection": "product",
       "dominant": true
     }
   }

@@ -14,8 +14,8 @@
     "name": {
       "type": "string"
     },
-    "image": {
-      "model": "file",
+    "images": {
+      "collection": "file",
       "via": "related",
       "allowedTypes": [
         "images",
@@ -53,12 +53,12 @@
       "type": "biginteger"
     },
     "category": {
-      "via": "products",
-      "model": "category"
+      "model": "category",
+      "via": "products"
     },
     "tags": {
-      "via": "products",
-      "collection": "tag"
+      "collection": "tag",
+      "via": "products"
     }
   }
 }

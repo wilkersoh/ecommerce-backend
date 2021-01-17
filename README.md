@@ -51,6 +51,8 @@ order controller, let user only retrieve their order record only.
 }
 ```
 
+password: Password@123
+
 
 
 How i started from:
