@@ -28,9 +28,6 @@
     "content": {
       "type": "richtext"
     },
-    "meta_description": {
-      "type": "text"
-    },
     "meta_title": {
       "type": "string"
     },
@@ -59,6 +56,9 @@
     "tags": {
       "collection": "tag",
       "via": "products"
+    },
+    "brand": {
+      "type": "string"
     }
   }
 }
