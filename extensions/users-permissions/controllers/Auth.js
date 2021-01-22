@@ -144,24 +144,13 @@ module.exports = {
               ? "localhost"
               : process.env.PRODUCTION_URL,
         });
-
+        console.log("token: ", token);
         ctx.send({
           status: "Authenticated",
           user: sanitizeEntity(user.toJSON ? user.toJSON() : user, {
             model: strapi.query("user", "users-permissions").model,
           }),
         });
-
-        /* Origin Auth.js
-        ctx.send({
-          jwt: strapi.plugins["users-permissions"].services.jwt.issue({
-            id: user.id,
-          }),
-          user: sanitizeEntity(user.toJSON ? user.toJSON() : user, {
-            model: strapi.query("user", "users-permissions").model,
-          }),
-        });
-        */
       }
     } else {
       if (!_.get(await store.get({ key: "grant" }), [provider, "enabled"])) {
@@ -549,12 +538,25 @@ module.exports = {
         return ctx.send({ user: sanitizedUser });
       }
 
-      const jwt = strapi.plugins["users-permissions"].services.jwt.issue(
+      // const jwt = strapi.plugins["users-permissions"].services.jwt.issue(
+      //   _.pick(user, ["id"])
+      // );
+      const token = strapi.plugins["users-permissions"].services.jwt.issue(
         _.pick(user, ["id"])
       );
 
+      ctx.cookies.set("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production" ? true : false,
+        maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
+        domain:
+          process.env.NODE_ENV === "development"
+            ? "localhost"
+            : process.env.PRODUCTION_URL,
+      });
+      console.log("token: ", token);
       return ctx.send({
-        jwt,
+        status: "Authenticated",
         user: sanitizedUser,
       });
     } catch (err) {
