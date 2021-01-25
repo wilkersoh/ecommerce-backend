@@ -17,6 +17,21 @@ const formatError = (error) => [
   { messages: [{ id: error.id, message: error.message, field: error.field }] },
 ];
 
+const setCookies = (ctx, token) => {
+  ctx.cookies.set("token", token, {
+    httpOnly: true,
+    // secure: process.env.NODE_ENV === "production" ? true : false,
+    secure: false,
+    maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
+    sameSite: "none",
+    domain: "https://ecommerce-frontend.staging.selfpaths.com",
+    // domain:
+    //   process.env.NODE_ENV === "development"
+    //     ? "localhost"
+    //     : process.env.PRODUCTION_URL,
+  });
+};
+
 module.exports = {
   async callback(ctx) {
     const provider = ctx.params.provider || "local";
@@ -135,18 +150,20 @@ module.exports = {
           id: user.id,
         });
 
-        ctx.cookies.set("token", token, {
-          httpOnly: true,
-          // secure: process.env.NODE_ENV === "production" ? true : false,
-          secure: false,
-          maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
-          samesSite: "none",
-          domain: "https://ecommerce-frontend.staging.selfpaths.com",
-          // domain:
-          //   process.env.NODE_ENV === "development"
-          //     ? "localhost"
-          //     : process.env.PRODUCTION_URL,
-        });
+        setCookies(ctx, token);
+
+        // ctx.cookies.set("token", token, {
+        //   httpOnly: true,
+        //   // secure: process.env.NODE_ENV === "production" ? true : false,
+        //   secure: false,
+        //   maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
+        //   samesSite: "none",
+        //   domain: "https://ecommerce-frontend.staging.selfpaths.com",
+        //   // domain:
+        //   //   process.env.NODE_ENV === "development"
+        //   //     ? "localhost"
+        //   //     : process.env.PRODUCTION_URL,
+        // });
         console.log("token: ", token);
         ctx.send({
           status: "Authenticated",
@@ -548,13 +565,15 @@ module.exports = {
         _.pick(user, ["id"])
       );
 
-      ctx.cookies.set("token", token, {
-        httpOnly: true,
-        secure: true,
-        samesSite: "none",
-        maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
-        domain: "https://ecommerce-frontend.staging.selfpaths.com",
-      });
+      setCookies(ctx, token);
+
+      // ctx.cookies.set("token", token, {
+      //   httpOnly: true,
+      //   secure: true,
+      //   maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
+      //   samesSite: "none",
+      //   domain: "https://ecommerce-frontend.staging.selfpaths.com",
+      // });
 
       return ctx.send({
         status: "Authenticated",
