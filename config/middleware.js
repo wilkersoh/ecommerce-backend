@@ -8,7 +8,6 @@ module.exports = {
         "https://ecommerce-backend.staging.selfpaths.com",
         "https://ecommerce-frontend.staging.selfpaths.com",
       ],
-      headers: "*",
     },
   },
 };
