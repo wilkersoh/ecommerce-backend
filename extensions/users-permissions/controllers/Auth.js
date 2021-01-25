@@ -147,7 +147,7 @@ module.exports = {
         ctx.cookies.set("token", token, {
           httpOnly: true,
           secure: true,
-          // sameSite: "none",
+          sameSite: "none",
           maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
           domain: "https://ecommerce-frontend.staging.selfpaths.com",
         });
@@ -570,7 +570,7 @@ module.exports = {
       ctx.cookies.set("token", token, {
         httpOnly: true,
         secure: true,
-        // sameSite: "none",
+        sameSite: "none",
         maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
         domain: "https://ecommerce-frontend.staging.selfpaths.com",
       });
