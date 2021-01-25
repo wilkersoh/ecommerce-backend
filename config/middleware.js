@@ -5,7 +5,7 @@ module.exports = {
       origin: [
         "http://localhost:3000",
         "http://localhost:1337",
-        "https://ecommerce-backend.staging.selfpaths.com/",
+        "https://selfpaths.com/",
       ],
     },
   },
