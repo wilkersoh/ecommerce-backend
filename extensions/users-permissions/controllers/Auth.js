@@ -554,7 +554,7 @@ module.exports = {
         secure: true,
         maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
         sameSite: "lax",
-        domain: "https://ecommerce-frontend.staging.selfpaths.com",
+        domain: ".selfpaths.com",
         // domain:
         //   process.env.NODE_ENV === "development"
         //     ? "localhost"
