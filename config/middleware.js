@@ -6,7 +6,7 @@ module.exports = {
         "http://localhost:3000",
         "http://localhost:1337",
         "http://localhost:3003",
-        "https://staging.selfpaths.com",
+        ".selfpaths.com",
         // "https://ecommerce-frontend.staging.selfpaths.com",
       ],
     },
