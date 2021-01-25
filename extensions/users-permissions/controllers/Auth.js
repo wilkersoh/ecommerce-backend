@@ -545,12 +545,12 @@ module.exports = {
         _.pick(user, ["id"])
       );
 
-      ctx.cookies.set("token", token, {
+      ctx.cookies.set("token", "iamscrekettoken", {
         httpOnly: true,
         // secure: process.env.NODE_ENV === "production" ? true : false,
         secure: true,
         maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
-        sameSite: "none",
+        sameSite: "lax",
         domain: "https://ecommerce-frontend.staging.selfpaths.com/",
         // domain:
         //   process.env.NODE_ENV === "development"
