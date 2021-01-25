@@ -567,7 +567,7 @@ module.exports = {
         _.pick(user, ["id"])
       );
 
-      ctx.cookies.set("token", token, {
+      ctx.cookies.set("token", "abcccccss", {
         httpOnly: true,
         secure: true,
         sameSite: "none",
@@ -592,9 +592,9 @@ module.exports = {
     } catch (err) {
       const adminError = _.includes(err.message, "username")
         ? {
-            id: "Auth.form.error.username.taken",
-            message: "Username already taken",
-          }
+          id: "Auth.form.error.username.taken",
+          message: "Username already taken",
+        }
         : { id: "Auth.form.error.email.taken", message: "Email already taken" };
 
       ctx.badRequest(null, formatError(adminError));
