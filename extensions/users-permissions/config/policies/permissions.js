@@ -1,13 +1,20 @@
+"use strict";
+
 const _ = require("lodash");
 
 module.exports = async (ctx, next) => {
   let role;
 
-  await strapi.plugins["magic"].services["magic"].loginWithMagic(ctx);
-
   if (ctx.state.user) {
     // request is already authenticated in a different way
     return next();
+  }
+
+  if (ctx.request && ctx.request.header && !ctx.request.header.authorization) {
+    const token = ctx.cookies.get("token");
+    if (token) {
+      ctx.request.header.authorization = "Bearer " + token;
+    }
   }
 
   if (ctx.request && ctx.request.header && ctx.request.header.authorization) {
