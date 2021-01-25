@@ -547,13 +547,15 @@ module.exports = {
 
       ctx.cookies.set("token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production" ? true : false,
+        // secure: process.env.NODE_ENV === "production" ? true : false,
+        secure: true,
         maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
         sameSite: "lax",
-        domain:
-          process.env.NODE_ENV === "development"
-            ? "localhost"
-            : process.env.PRODUCTION_URL,
+        domain: "https://ecommerce-frontend.staging.selfpaths.com",
+        // domain:
+        //   process.env.NODE_ENV === "development"
+        //     ? "localhost"
+        //     : process.env.PRODUCTION_URL,
       });
       console.log("token: ", token);
       return ctx.send({
