@@ -567,13 +567,13 @@ module.exports = {
         _.pick(user, ["id"])
       );
 
-      ctx.cookies.set("token", "abcccccss", {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
-        domain: "https://ecommerce-frontend.staging.selfpaths.com",
-      });
+      // ctx.cookies.set("token", "abcccccss", {
+      //   httpOnly: true,
+      //   secure: true,
+      //   sameSite: "none",
+      //   maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
+      //   domain: "https://ecommerce-frontend.staging.selfpaths.com",
+      // });
 
       // setCookies(ctx, token);
 
@@ -592,9 +592,9 @@ module.exports = {
     } catch (err) {
       const adminError = _.includes(err.message, "username")
         ? {
-          id: "Auth.form.error.username.taken",
-          message: "Username already taken",
-        }
+            id: "Auth.form.error.username.taken",
+            message: "Username already taken",
+          }
         : { id: "Auth.form.error.email.taken", message: "Email already taken" };
 
       ctx.badRequest(null, formatError(adminError));
