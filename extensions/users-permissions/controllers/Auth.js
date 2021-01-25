@@ -550,8 +550,8 @@ module.exports = {
         // secure: process.env.NODE_ENV === "production" ? true : false,
         secure: true,
         maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
-        sameSite: "lax",
-        domain: "https://ecommerce-backend.staging.selfpaths.com",
+        sameSite: "none",
+        domain: "https://ecommerce-frontend.staging.selfpaths.com",
         // domain:
         //   process.env.NODE_ENV === "development"
         //     ? "localhost"
@@ -565,9 +565,9 @@ module.exports = {
     } catch (err) {
       const adminError = _.includes(err.message, "username")
         ? {
-          id: "Auth.form.error.username.taken",
-          message: "Username already taken",
-        }
+            id: "Auth.form.error.username.taken",
+            message: "Username already taken",
+          }
         : { id: "Auth.form.error.email.taken", message: "Email already taken" };
 
       ctx.badRequest(null, formatError(adminError));
