@@ -9,7 +9,7 @@ const { sanitizeEntity } = require("strapi-utils");
 module.exports = {
   async find(ctx) {
     const { user } = ctx.state; // this is the magic user
-    console.log("user:::", user);
+
     let entities;
     if (ctx.query._q) {
       entities = await strapi.services.cart.search({
