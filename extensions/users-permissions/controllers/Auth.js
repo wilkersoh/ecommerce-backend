@@ -140,6 +140,7 @@ module.exports = {
           // secure: process.env.NODE_ENV === "production" ? true : false,
           secure: false,
           maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
+          samesSite: "none",
           domain: "https://ecommerce-frontend.staging.selfpaths.com",
           // domain:
           //   process.env.NODE_ENV === "development"
@@ -550,6 +551,7 @@ module.exports = {
       ctx.cookies.set("token", token, {
         httpOnly: true,
         secure: true,
+        samesSite: "none",
         maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
         domain: "https://ecommerce-frontend.staging.selfpaths.com",
       });
