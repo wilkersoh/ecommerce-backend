@@ -23,7 +23,7 @@ const setCookies = (ctx, token) => {
     // secure: process.env.NODE_ENV === "production" ? true : false,
     secure: false,
     maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
-    sameSite: "none",
+    // sameSite: "none",
     domain: "https://ecommerce-frontend.staging.selfpaths.com",
     // domain:
     //   process.env.NODE_ENV === "development"
