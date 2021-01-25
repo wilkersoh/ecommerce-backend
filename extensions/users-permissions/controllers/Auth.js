@@ -567,23 +567,15 @@ module.exports = {
         _.pick(user, ["id"])
       );
 
-      // ctx.cookies.set("token", "abcccccss", {
-      //   httpOnly: true,
-      //   secure: true,
-      //   sameSite: "none",
-      //   maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
-      //   domain: "https://ecommerce-frontend.staging.selfpaths.com",
-      // });
-
       // setCookies(ctx, token);
 
-      // ctx.cookies.set("token", token, {
-      //   httpOnly: true,
-      //   secure: true,
-      //   maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
-      //   samesSite: "none",
-      //   domain: "https://ecommerce-frontend.staging.selfpaths.com",
-      // });
+      ctx.cookies.set("token", token, {
+        httpOnly: true,
+        secure: true,
+        maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
+        samesSite: "none",
+        domain: "https://ecommerce-frontend.staging.selfpaths.com",
+      });
 
       return ctx.send({
         status: "Authenticated",
