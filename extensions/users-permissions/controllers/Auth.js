@@ -19,12 +19,12 @@ const formatError = (error) => [
 
 const setCookies = function (ctx, token) {
   console.log("inside setCookies function");
-  console.log("i am token:", token);
+  console.log("i am token updated:", token);
   try {
     ctx.cookies.set("token", token, {
       httpOnly: true,
       secure: true,
-      sameSite: "lax",
+      sameSite: "none",
       maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
       domain: "https://ecommerce-frontend.staging.selfpaths.com",
       // domain: "localhost",
@@ -594,9 +594,9 @@ module.exports = {
     } catch (err) {
       const adminError = _.includes(err.message, "username")
         ? {
-            id: "Auth.form.error.username.taken",
-            message: "Username already taken",
-          }
+          id: "Auth.form.error.username.taken",
+          message: "Username already taken",
+        }
         : { id: "Auth.form.error.email.taken", message: "Email already taken" };
 
       ctx.badRequest(null, formatError(adminError));
