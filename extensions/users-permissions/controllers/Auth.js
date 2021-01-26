@@ -22,10 +22,10 @@ const setCookies = function (ctx, token) {
   try {
     ctx.cookies.set("token", token, {
       httpOnly: true,
-      secure: false,
+      secure: true,
       sameSite: "lax",
       maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
-      domain: "https://ecommerce-frontend.staging.selfpaths.com/",
+      domain: "selfpaths.com",
     });
   } catch (error) {
     console.log(error);
