@@ -25,7 +25,7 @@ const setCookies = function (ctx, token) {
       secure: true,
       sameSite: "lax",
       maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
-      domain: "selfpaths.com",
+      domain: "https://selfpaths.com",
     });
   } catch (error) {
     console.log(error);
