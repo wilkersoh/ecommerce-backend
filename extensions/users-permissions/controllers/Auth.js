@@ -18,13 +18,15 @@ const formatError = (error) => [
 ];
 
 const setCookies = function (ctx, token) {
+  console.log("inside setCookies function");
   ctx.cookies.set("token", token, {
     httpOnly: true,
-    secure: false,
+    secure: true,
     sameSite: "none",
     maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
     domain: "https://ecommerce-frontend.staging.selfpaths.com",
   });
+  console.log("last line of  setCookies function");
 };
 
 module.exports = {
