@@ -25,7 +25,7 @@ const setCookies = function (ctx, token) {
       secure: false,
       sameSite: "none",
       maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
-      domain: "https://ecommerce-frontend.staging.selfpaths.com",
+      domain: "https://ecommerce-frontend.staging.selfpaths.com/",
     });
   } catch (error) {
     console.log(error);
