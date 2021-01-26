@@ -21,6 +21,7 @@ const setCookies = function (ctx, token) {
   ctx.cookies.set("token", token, {
     httpOnly: true,
     secure: false,
+    sameSite: "none",
     maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
     domain: "https://ecommerce-frontend.staging.selfpaths.com",
   });
@@ -144,15 +145,16 @@ module.exports = {
           id: user.id,
         });
 
-        ctx.cookies.set("token", token, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-          maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
-          domain: "https://ecommerce-frontend.staging.selfpaths.com",
-        });
+        // ctx.cookies.set("token", token, {
+        //   httpOnly: true,
+        //   secure: true,
+        //   sameSite: "none",
+        //   maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
+        //   domain: "https://ecommerce-frontend.staging.selfpaths.com",
+        // });
+        console.log("login token: ", token);
 
-        // setCookies(ctx, token);
+        setCookies(ctx, token);
 
         // ctx.cookies.set("token", token, {
         //   httpOnly: true,
@@ -567,15 +569,15 @@ module.exports = {
         _.pick(user, ["id"])
       );
 
-      // setCookies(ctx, token);
       console.log("token: ", token);
-      ctx.cookies.set("token", token, {
-        httpOnly: true,
-        secure: true,
-        maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
-        samesSite: "none",
-        domain: "https://ecommerce-frontend.staging.selfpaths.com",
-      });
+      setCookies(ctx, token);
+      // ctx.cookies.set("token", token, {
+      //   httpOnly: true,
+      //   secure: true,
+      //   maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
+      //   samesSite: "none",
+      //   domain: "https://ecommerce-frontend.staging.selfpaths.com",
+      // });
 
       return ctx.send({
         status: "Authenticated",
@@ -584,9 +586,9 @@ module.exports = {
     } catch (err) {
       const adminError = _.includes(err.message, "username")
         ? {
-          id: "Auth.form.error.username.taken",
-          message: "Username already taken",
-        }
+            id: "Auth.form.error.username.taken",
+            message: "Username already taken",
+          }
         : { id: "Auth.form.error.email.taken", message: "Email already taken" };
 
       ctx.badRequest(null, formatError(adminError));
