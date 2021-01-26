@@ -18,8 +18,7 @@ const formatError = (error) => [
 ];
 
 const setCookies = function (ctx, token) {
-  console.log("inside setCookies function");
-  console.log("i am token updated -1:", token);
+  console.log("i am token:", token);
   try {
     ctx.cookies.set("token", token, {
       httpOnly: true,
@@ -33,7 +32,6 @@ const setCookies = function (ctx, token) {
     console.log(error);
     console.log("cookies function error on top");
   }
-  console.log("last line of  setCookies function");
 };
 
 module.exports = {
@@ -154,31 +152,21 @@ module.exports = {
           id: user.id,
         });
 
+        setCookies(ctx, token);
+
         // ctx.cookies.set("token", token, {
         //   httpOnly: true,
-        //   secure: true,
-        //   sameSite: "none",
+        //   // secure: process.env.NODE_ENV === "production" ? true : false,
+        //   secure: false,
         //   maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
-        //   domain: "https://ecommerce-frontend.staging.selfpaths.com",
+        //   samesSite: "none",
+        //   // domain: "https://ecommerce-frontend.staging.selfpaths.com",
+        //   domain:
+        //     process.env.NODE_ENV === "development"
+        //       ? "localhost"
+        //       : process.env.PRODUCTION_URL,
         // });
-        console.log("login token: ", token);
 
-        // setCookies(ctx, token);
-
-        ctx.cookies.set("token", token, {
-          httpOnly: true,
-          // secure: process.env.NODE_ENV === "production" ? true : false,
-          secure: false,
-          maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
-          samesSite: "none",
-          // domain: "https://ecommerce-frontend.staging.selfpaths.com",
-          domain:
-            process.env.NODE_ENV === "development"
-              ? "localhost"
-              : process.env.PRODUCTION_URL,
-        });
-
-        console.log("token login function: ", token);
         ctx.send({
           status: "Authenticated",
           user: sanitizeEntity(user.toJSON ? user.toJSON() : user, {
