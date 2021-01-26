@@ -568,13 +568,13 @@ module.exports = {
       );
 
       // setCookies(ctx, token);
-
+      console.log("token: ", token);
       ctx.cookies.set("token", token, {
         httpOnly: true,
         secure: true,
         maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
         samesSite: "none",
-        domain: ".selfpaths.com",
+        domain: "https://ecommerce-frontend.staging.selfpaths.com",
       });
 
       return ctx.send({
