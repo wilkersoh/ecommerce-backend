@@ -19,18 +19,18 @@ const formatError = (error) => [
 
 const setCookies = function (ctx, token) {
   console.log("inside setCookies function");
-  try {
-    ctx.cookies.set("token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
-      domain: "https://ecommerce-frontend.staging.selfpaths.com",
-    });
-  } catch (error) {
-    console.log(error);
-    console.log("cookies function error on top");
-  }
+  // try {
+  ctx.cookies.set("token", token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
+    domain: "https://ecommerce-frontend.staging.selfpaths.com",
+  });
+  // } catch (error) {
+  //   console.log(error);
+  //   console.log("cookies function error on top");
+  // }
   console.log("last line of  setCookies function");
 };
 
