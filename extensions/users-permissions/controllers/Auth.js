@@ -576,7 +576,7 @@ module.exports = {
         _.pick(user, ["id"])
       );
 
-      console.log("token-----------------------: ", token);
+      console.log("token----------is here-------------: ", token);
 
       setCookies(ctx, token);
       // ctx.cookies.set("token", token, {
