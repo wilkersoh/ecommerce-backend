@@ -19,18 +19,19 @@ const formatError = (error) => [
 
 const setCookies = function (ctx, token) {
   console.log("inside setCookies function");
-  // try {
-  ctx.cookies.set("token", token, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "none",
-    maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
-    domain: "https://ecommerce-frontend.staging.selfpaths.com",
-  });
-  // } catch (error) {
-  //   console.log(error);
-  //   console.log("cookies function error on top");
-  // }
+  try {
+    ctx.cookies.set("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
+      domain: "https://ecommerce-frontend.staging.selfpaths.com",
+      // domain: "localhost",
+    });
+  } catch (error) {
+    console.log(error);
+    console.log("cookies function error on top");
+  }
   console.log("last line of  setCookies function");
 };
 
@@ -161,21 +162,22 @@ module.exports = {
         // });
         console.log("login token: ", token);
 
-        setCookies(ctx, token);
+        // setCookies(ctx, token);
 
-        // ctx.cookies.set("token", token, {
-        //   httpOnly: true,
-        //   // secure: process.env.NODE_ENV === "production" ? true : false,
-        //   secure: false,
-        //   maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
-        //   samesSite: "none",
-        //   domain: "https://ecommerce-frontend.staging.selfpaths.com",
-        //   // domain:
-        //   //   process.env.NODE_ENV === "development"
-        //   //     ? "localhost"
-        //   //     : process.env.PRODUCTION_URL,
-        // });
-        console.log("token: ", token);
+        ctx.cookies.set("token", token, {
+          httpOnly: true,
+          // secure: process.env.NODE_ENV === "production" ? true : false,
+          secure: false,
+          maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
+          samesSite: "none",
+          // domain: "https://ecommerce-frontend.staging.selfpaths.com",
+          domain:
+            process.env.NODE_ENV === "development"
+              ? "localhost"
+              : process.env.PRODUCTION_URL,
+        });
+
+        console.log("token login function: ", token);
         ctx.send({
           status: "Authenticated",
           user: sanitizeEntity(user.toJSON ? user.toJSON() : user, {
@@ -581,10 +583,9 @@ module.exports = {
       setCookies(ctx, token);
       // ctx.cookies.set("token", token, {
       //   httpOnly: true,
-      //   secure: true,
+      //   secure: false,
       //   maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
-      //   samesSite: "none",
-      //   domain: "https://ecommerce-frontend.staging.selfpaths.com",
+      //   domain: "localhost",
       // });
 
       return ctx.send({
