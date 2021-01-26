@@ -19,6 +19,7 @@ const formatError = (error) => [
 
 const setCookies = function (ctx, token) {
   console.log("inside setCookies function");
+  console.log("i am token:", token);
   try {
     ctx.cookies.set("token", token, {
       httpOnly: true,
@@ -577,8 +578,6 @@ module.exports = {
       const token = strapi.plugins["users-permissions"].services.jwt.issue(
         _.pick(user, ["id"])
       );
-
-      console.log("token----------is here-------------: ", token);
 
       setCookies(ctx, token);
       // ctx.cookies.set("token", token, {
