@@ -19,14 +19,14 @@ const formatError = (error) => [
 
 const setCookies = function (ctx, token) {
   console.log("inside setCookies function");
-  console.log("i am token updated:", token);
+  console.log("i am token updated -1:", token);
   try {
     ctx.cookies.set("token", token, {
       httpOnly: true,
       secure: true,
       sameSite: "none",
       maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
-      domain: "https://ecommerce-frontend.staging.selfpaths.com",
+      domain: "selfpaths.com",
       // domain: "localhost",
     });
   } catch (error) {
