@@ -24,7 +24,7 @@ const setCookies = function (ctx, token) {
     ctx.cookies.set("token", token, {
       httpOnly: true,
       secure: true,
-      sameSite: "none",
+      sameSite: "lax",
       maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
       domain: "selfpaths.com",
       // domain: "localhost",
@@ -594,9 +594,9 @@ module.exports = {
     } catch (err) {
       const adminError = _.includes(err.message, "username")
         ? {
-          id: "Auth.form.error.username.taken",
-          message: "Username already taken",
-        }
+            id: "Auth.form.error.username.taken",
+            message: "Username already taken",
+          }
         : { id: "Auth.form.error.email.taken", message: "Email already taken" };
 
       ctx.badRequest(null, formatError(adminError));
