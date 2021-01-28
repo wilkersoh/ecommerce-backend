@@ -4,10 +4,11 @@ module.exports = {
   async logout(ctx) {
     ctx.cookies.set("token", null, {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV != "development" ? true : false,
       sameSite: "lax",
       maxAge: 0,
-      domain: "selfpaths.com",
+      domain:
+        process.env.NODE_ENV != "development" ? "selfpaths.com" : "localhost",
       // domain: "localhost",
     });
     console.log("user trigger logout ");

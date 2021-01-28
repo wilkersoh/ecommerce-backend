@@ -25,8 +25,7 @@ module.exports = {
    * @param {any} ctx
    */
   async find(ctx) {
-    const { user } = ctx.state; // this is the magic user
-
+    const { user } = ctx.state;
     let entities;
     if (ctx.query._q) {
       entities = await strapi.services.order.search({

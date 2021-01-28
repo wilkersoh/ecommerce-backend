@@ -18,19 +18,17 @@ const formatError = (error) => [
 ];
 
 const setCookies = function (ctx, token) {
-  console.log("i am token:", token);
   try {
     ctx.cookies.set("token", token, {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV != "development" ? true : false,
       sameSite: "lax",
       maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
-      domain: "selfpaths.com",
-      // domain: "localhost",
+      domain:
+        process.env.NODE_ENV != "development" ? "selfpaths.com" : "localhost",
     });
   } catch (error) {
     console.log(error);
-    console.log("cookies function error on top");
   }
 };
 
@@ -89,7 +87,7 @@ module.exports = {
       const user = await strapi
         .query("user", "users-permissions")
         .findOne(query);
-      console.log(user);
+
       if (!user) {
         return ctx.badRequest(
           null,
@@ -539,7 +537,6 @@ module.exports = {
       if (!settings.email_confirmation) {
         params.confirmed = true;
       }
-
       const user = await strapi
         .query("user", "users-permissions")
         .create(params);
