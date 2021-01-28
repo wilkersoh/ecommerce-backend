@@ -18,9 +18,7 @@
       "collection": "file",
       "via": "related",
       "allowedTypes": [
-        "images",
-        "files",
-        "videos"
+        "images"
       ],
       "plugin": "upload",
       "required": false
@@ -40,11 +38,13 @@
     },
     "orders": {
       "collection": "order",
-      "via": "product"
+      "via": "product",
+      "private": true
     },
     "carts": {
       "collection": "cart",
-      "via": "product"
+      "via": "product",
+      "private": true
     },
     "store": {
       "type": "biginteger"
