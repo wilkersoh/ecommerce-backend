@@ -13,9 +13,7 @@
     "username": {
       "type": "string",
       "minLength": 3,
-      "unique": true,
-      "configurable": false,
-      "required": true
+      "configurable": false
     },
     "email": {
       "type": "email",
@@ -60,12 +58,18 @@
       "configurable": false
     },
     "orders": {
-      "via": "user",
-      "collection": "order"
+      "collection": "order",
+      "via": "user"
     },
     "carts": {
-      "via": "user",
-      "collection": "cart"
+      "collection": "cart",
+      "via": "user"
+    },
+    "first_name": {
+      "type": "string"
+    },
+    "last_name": {
+      "type": "string"
     }
   }
 }
