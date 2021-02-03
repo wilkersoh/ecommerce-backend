@@ -60,6 +60,10 @@
     "types": {
       "collection": "type",
       "via": "products"
+    },
+    "categories": {
+      "via": "products",
+      "collection": "category"
     }
   }
 }

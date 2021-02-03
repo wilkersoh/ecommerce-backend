@@ -1,8 +1,8 @@
 {
-  "kind": "collectionType",
-  "collectionName": "categories",
+  "kind": "singleType",
+  "collectionName": "shop_details",
   "info": {
-    "name": "category",
+    "name": "shop_details",
     "description": ""
   },
   "options": {
@@ -14,7 +14,7 @@
     "name": {
       "type": "string"
     },
-    "image": {
+    "shop_icon": {
       "model": "file",
       "via": "related",
       "allowedTypes": [
@@ -25,14 +25,14 @@
       "plugin": "upload",
       "required": false
     },
-    "category_slug": {
-      "type": "uid",
-      "targetField": "name"
+    "address": {
+      "type": "text"
     },
-    "products": {
-      "collection": "product",
-      "via": "categories",
-      "dominant": true
+    "operation_hour": {
+      "type": "string"
+    },
+    "contact_number": {
+      "type": "integer"
     }
   }
 }
