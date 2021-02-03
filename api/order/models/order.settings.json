@@ -15,7 +15,8 @@
       "type": "enumeration",
       "enum": [
         "paid",
-        "unpaid"
+        "unpaid",
+        "cancel"
       ]
     },
     "total": {
@@ -29,9 +30,9 @@
       "model": "product"
     },
     "user": {
-      "via": "orders",
       "plugin": "users-permissions",
-      "model": "user"
+      "model": "user",
+      "via": "orders"
     },
     "quantity": {
       "type": "integer"
@@ -40,7 +41,7 @@
       "type": "string",
       "unique": false
     },
-    "shipping": {
+    "ship_to": {
       "type": "text"
     }
   }

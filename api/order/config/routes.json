@@ -42,6 +42,14 @@
     },
     {
       "method": "PUT",
+      "path": "/orders/cancel",
+      "handler": "order.cancel",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
       "path": "/orders/:id",
       "handler": "order.update",
       "config": {

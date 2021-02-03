@@ -58,8 +58,8 @@
       "configurable": false
     },
     "orders": {
-      "collection": "order",
-      "via": "user"
+      "via": "user",
+      "collection": "order"
     },
     "carts": {
       "collection": "cart",

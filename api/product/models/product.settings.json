@@ -32,33 +32,34 @@
     "price": {
       "type": "decimal"
     },
-    "slug": {
+    "product_slug": {
       "type": "uid",
       "targetField": "name"
     },
     "orders": {
+      "private": true,
       "collection": "order",
-      "via": "product",
-      "private": true
+      "via": "product"
     },
     "carts": {
+      "private": true,
       "collection": "cart",
-      "via": "product",
-      "private": true
+      "via": "product"
     },
-    "store": {
+    "quantity_in_store": {
       "type": "biginteger"
-    },
-    "category": {
-      "model": "category",
-      "via": "products"
     },
     "tags": {
       "collection": "tag",
       "via": "products"
     },
     "brand": {
-      "type": "string"
+      "model": "brand",
+      "via": "products"
+    },
+    "types": {
+      "collection": "type",
+      "via": "products"
     }
   }
 }

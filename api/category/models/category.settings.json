@@ -15,8 +15,9 @@
       "type": "string"
     },
     "products": {
-      "via": "category",
-      "collection": "product"
+      "collection": "product",
+      "via": "categories",
+      "dominant": true
     },
     "image": {
       "model": "file",
@@ -29,7 +30,7 @@
       "plugin": "upload",
       "required": false
     },
-    "slug": {
+    "category_slug": {
       "type": "uid",
       "targetField": "name"
     }

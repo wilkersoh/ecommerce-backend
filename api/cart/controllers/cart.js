@@ -8,7 +8,7 @@ const { sanitizeEntity } = require("strapi-utils");
 
 module.exports = {
   async find(ctx) {
-    const { user } = ctx.state; // this is the magic user
+    const { user } = ctx.state;
 
     let entities;
     if (ctx.query._q) {
@@ -49,6 +49,7 @@ module.exports = {
         })
       );
     } catch (error) {
+      console.log("cart create ERRROR -----");
       throw new Error("Failed to save in database");
     }
 
@@ -64,6 +65,7 @@ module.exports = {
         })
       );
     } catch (error) {
+      console.log("cart Update ERRROR -----");
       throw new Error(error);
     }
 

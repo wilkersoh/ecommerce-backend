@@ -82,6 +82,7 @@ module.exports = {
         quantity,
       };
     });
+    const trackID = uuidv4();
 
     const session = await stripe.checkout.sessions.create({
       billing_address_collection: "required",
@@ -92,10 +93,9 @@ module.exports = {
       customer_email: user.email,
       mode: "payment",
       success_url: `${BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: BASE_URL,
+      cancel_url: `${BASE_URL}/cancel?cancel_id=${trackID}`,
       line_items: [...cartItems],
     });
-    const trackID = uuidv4();
 
     try {
       await Promise.all(
@@ -129,20 +129,71 @@ module.exports = {
       const orders = await strapi.services.order.find({
         checkout_session: checkout_session,
       });
+
       const updateOrder = await Promise.all(
         orders.map((order) => {
+          const { product, quantity } = order;
+          // Update product quantity
+          const quantity_in_store = +product.quantity_in_store - quantity;
+          // const out_of_stock =
+          //   +product.quantity_in_store - quantity == 0 ? true : false;
+
+          strapi.services.product.update(
+            { id: product.id },
+            { quantity_in_store }
+          );
+
           return strapi.services.order.update(
             { id: order.id },
             {
-              shipping: JSON.stringify(session.shipping),
+              ship_to: JSON.stringify(session.shipping, null, 2),
               status: "paid",
             }
           );
         })
       );
+
+      // update product quantity_in_store
+
       return sanitizeEntity(updateOrder, { model: strapi.models.order });
     } else {
       ctx.throw(400, "The payment wasn't sucesful, please call support");
     }
+  },
+  async cancel(ctx) {
+    const { cancel_id } = ctx.request.body;
+    const { user } = ctx.state;
+
+    const orders = await strapi.services.order.find({
+      trackID: cancel_id,
+    });
+
+    if (orders[0].user.id != user.id) {
+      const formatError = (error) => [
+        {
+          messages: [{ message: error.message, field: error.field }],
+        },
+      ];
+
+      return ctx.badRequest(
+        null,
+        formatError({
+          message: "Not authorise to do this action.",
+        })
+      );
+    }
+
+    const updatedOrder = await Promise.all(
+      orders.map((order) => {
+        return strapi.services.order.update(
+          { id: order.id },
+          {
+            status: "cancel",
+          }
+        );
+      })
+    );
+
+    return sanitizeEntity(updatedOrder, { model: strapi.models.order });
   },
 };
