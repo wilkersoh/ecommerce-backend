@@ -12,8 +12,8 @@
   },
   "attributes": {
     "products": {
-      "collection": "product",
-      "via": "brand"
+      "via": "brand",
+      "collection": "product"
     },
     "name": {
       "type": "string"
