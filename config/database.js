@@ -14,9 +14,9 @@ module.exports = ({ env }) => ({
         port: env.int("DATABASE_PORT", 3306),
         database: env("DATABASE_NAME", "boilerplateEco"),
         username: env("DATABASE_USERNAME", "root"), // not work in selfpaths user
-        // password: env("DATABASE_PASSWORD", "Selfpaths@password123"),
+        password: env("DATABASE_PASSWORD", "Selfpaths@password123"),
         // username: env("DATABASE_USERNAME", "root"),
-        password: env("DATABASE_PASSWORD", password),
+        // password: env("DATABASE_PASSWORD", password),
       },
       options: {},
     },
