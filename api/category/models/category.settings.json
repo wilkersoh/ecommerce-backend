@@ -33,6 +33,12 @@
       "collection": "product",
       "via": "categories",
       "dominant": true
+    },
+    "meta_title": {
+      "type": "string"
+    },
+    "meta_description": {
+      "type": "richtext"
     }
   }
 }
