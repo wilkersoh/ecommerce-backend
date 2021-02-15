@@ -27,6 +27,13 @@ const setCookies = function (ctx, token) {
       domain:
         process.env.NODE_ENV != "development" ? "selfpaths.com" : "localhost",
     });
+    // const viewToken = crypto.randomBytes(20).toString("hex");
+
+    // ctx.cookies.set("viewToken", viewToken, {
+    //   httpOnly: false,
+    //   secure: process.env.NODE_ENV != "development" ? true : false,
+    //   maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
+    // });
   } catch (error) {
     console.log(error);
   }
@@ -151,19 +158,6 @@ module.exports = {
         });
 
         setCookies(ctx, token);
-
-        // ctx.cookies.set("token", token, {
-        //   httpOnly: true,
-        //   // secure: process.env.NODE_ENV === "production" ? true : false,
-        //   secure: false,
-        //   maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
-        //   samesSite: "none",
-        //   // domain: "https://ecommerce-frontend.staging.selfpaths.com",
-        //   domain:
-        //     process.env.NODE_ENV === "development"
-        //       ? "localhost"
-        //       : process.env.PRODUCTION_URL,
-        // });
 
         ctx.send({
           status: "Authenticated",
@@ -565,12 +559,6 @@ module.exports = {
       );
 
       setCookies(ctx, token);
-      // ctx.cookies.set("token", token, {
-      //   httpOnly: true,
-      //   secure: false,
-      //   maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
-      //   domain: "localhost",
-      // });
 
       return ctx.send({
         status: "Authenticated",

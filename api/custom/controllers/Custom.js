@@ -11,7 +11,7 @@ module.exports = {
         process.env.NODE_ENV != "development" ? "selfpaths.com" : "localhost",
       // domain: "localhost",
     });
-    console.log("user trigger logout ");
+
     ctx.send({
       authorized: true,
       message: "Successfully Log out",

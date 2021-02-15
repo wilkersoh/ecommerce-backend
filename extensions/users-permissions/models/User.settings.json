@@ -62,8 +62,8 @@
       "collection": "order"
     },
     "carts": {
-      "collection": "cart",
-      "via": "user"
+      "via": "user",
+      "collection": "cart"
     },
     "first_name": {
       "type": "string"
