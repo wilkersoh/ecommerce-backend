@@ -39,18 +39,19 @@ module.exports = {
     let entity;
 
     try {
+      const userID = user ? user.id : null;
       entity = await Promise.all(
         ctx.request.body.map((cart) => {
           return strapi.services.cart.create({
-            user: user.id,
+            user: userID,
             product: cart.productID,
             quantity: cart.quantity,
+            category_slug: cart.category_slug,
           });
         })
       );
     } catch (error) {
-      console.log("cart create ERRROR -----");
-      throw new Error("Failed to save in database");
+      throw new Error("Create Cart Failed to save in database");
     }
 
     return sanitizeEntity(entity, { model: strapi.models.cart });

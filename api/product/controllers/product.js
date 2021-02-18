@@ -54,34 +54,6 @@ module.exports = {
     const result = await Promise.all([resultBrands, resultTypes, resultTags]);
 
     return result;
-
-    // const result = await knex("products as p")
-    //   .select(
-    //     "b.name as brand_name",
-    //     "t.name as type_name",
-    //     "tg.name as tag_name",
-    //     knex.raw(
-    //       "count(b.id) as brandCount, count(t.id) as typeCount, count(tg.id) as tagCount"
-    //     )
-    //   )
-    //   .join("categories_products__products_categories as cp", {
-    //     "cp.product_id": "p.id",
-    //   })
-    //   .join("categories as c", { category_id: "c.id" })
-    //   .leftJoin("brands as b", { brand: "b.id" })
-    //   .leftJoin("products_types__types_products as pt", {
-    //     "pt.product_id": "p.id",
-    //   })
-    //   .leftJoin("types as t", { type_id: "t.id" })
-    //   .leftJoin("products_tags__tags_products as ptg", {
-    //     // manyTomany pivot table
-    //     "ptg.product_id": "p.id", // 把pivot table裡的 product_id 和前面product id 結合
-    //   })
-    //   .leftJoin("tags as tg", { tag_id: "tg.id" }) // 他們的row都在一起後，把tag的table去找 已經結合的 row裡的tag_id 找對方， 然後就實現 merge了
-    //   .where("category_slug", category_slug)
-    //   .groupBy("brand_name", "type_name", "tag_name");
-
-    // return result;
   },
   async showFiltered(ctx) {
     const knex = strapi.connections.default;
@@ -91,6 +63,7 @@ module.exports = {
           category_slug: 'stationery-stamp-ink',
           types: [ 'sasuka', 'hey' ],
           brands: [ '2021', 'cutest' ]
+          limit: "12"
         }
     */
 
@@ -101,8 +74,10 @@ module.exports = {
       tags,
       limit,
       offset,
+      sortBys,
     } = ctx.request.query;
     console.log("ctx.request.query :>> ", ctx.request.query);
+    console.log("hit sortBys :>> ", sortBys);
 
     const queryBuilder = knex("products as p")
       .select(
@@ -137,9 +112,10 @@ module.exports = {
       .leftJoin("upload_file_morph as ufm", { "p.id": "ufm.related_id" })
       .leftJoin("upload_file as up", { upload_file_id: "up.id" })
       .where("category_slug", category_slug)
-      .groupBy("productID");
-    // .limit(10)
-    // .offset(30);
+      .groupBy("productID")
+      .orderBy(`${sortBys[0]}`, `${sortBys[1]}`)
+      .limit(+limit)
+      .offset(+offset);
 
     const activeValues = [brands, types, tags].filter(
       (value) => !!value != false
@@ -188,6 +164,11 @@ module.exports = {
       if (!Array.isArray(tags)) tags = [tags];
       queryBuilder.whereIn("tg.name", tags);
     }
+
+    // queryBuilder.then((result) => {
+    //   console.log(JSON.parse(JSON.stringify(result)));
+    //   console.log("hiiiiti");
+    // });
 
     return queryBuilder.then((result) => result);
   },

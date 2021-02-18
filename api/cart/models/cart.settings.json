@@ -12,16 +12,19 @@
   },
   "attributes": {
     "product": {
-      "via": "carts",
-      "model": "product"
+      "model": "product",
+      "via": "carts"
     },
     "quantity": {
       "type": "integer"
     },
     "user": {
-      "via": "carts",
       "plugin": "users-permissions",
-      "model": "user"
+      "model": "user",
+      "via": "carts"
+    },
+    "category_slug": {
+      "type": "string"
     }
   }
 }

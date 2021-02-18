@@ -18,6 +18,22 @@
     },
     {
       "method": "GET",
+      "path": "/products/getFilterList",
+      "handler": "product.getFilterList",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/products/showFiltered",
+      "handler": "product.showFiltered",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
       "path": "/products/:id",
       "handler": "product.findOne",
       "config": {

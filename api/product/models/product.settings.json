@@ -42,9 +42,9 @@
       "via": "product"
     },
     "carts": {
-      "private": true,
+      "via": "product",
       "collection": "cart",
-      "via": "product"
+      "private": true
     },
     "quantity_in_store": {
       "type": "biginteger"
@@ -62,8 +62,8 @@
       "via": "products"
     },
     "categories": {
-      "via": "products",
-      "collection": "category"
+      "collection": "category",
+      "via": "products"
     }
   }
 }
