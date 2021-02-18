@@ -9,7 +9,15 @@ module.exports = {
       maxAge: 0,
       domain:
         process.env.NODE_ENV != "development" ? "selfpaths.com" : "localhost",
-      // domain: "localhost",
+    });
+
+    ctx.cookies.set("viewToken", null, {
+      httpOnly: false,
+      secure: process.env.NODE_ENV != "development" ? true : false,
+      sameSite: "lax",
+      maxAge: 0,
+      // domain:
+      //   process.env.NODE_ENV != "development" ? "selfpaths.com" : "localhost",
     });
 
     ctx.send({
