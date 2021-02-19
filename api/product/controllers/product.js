@@ -14,7 +14,7 @@ module.exports = {
   async getFilterList(ctx) {
     const knex = strapi.connections.default;
     const { category_slug } = ctx.request.query;
-
+    console.log("category_slug :>> ", category_slug);
     const resultBrands = knex("products as p")
       .select("b.name as brand_name", knex.raw("count(b.id) as brandCount"))
       .join("categories_products__products_categories as cp", {
@@ -52,7 +52,7 @@ module.exports = {
       .groupBy("tag_name");
 
     const result = await Promise.all([resultBrands, resultTypes, resultTags]);
-
+    console.log("result :>> ", result);
     return result;
   },
   async showFiltered(ctx) {
