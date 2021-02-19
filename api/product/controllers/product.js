@@ -15,17 +15,16 @@ module.exports = {
     const knex = strapi.connections.default;
     const { category_slug } = ctx.request.query;
     console.log("category_slug :>> ", category_slug);
-    const resultBrands = knex("products as p")
+    let resultBrands = knex("products as p")
       .select("b.name as brand_name", knex.raw("count(b.id) as brandCount"))
       .join("categories_products__products_categories as cp", {
         "cp.product_id": "p.id",
       })
       .join("categories as c", { category_id: "c.id" })
       .leftJoin("brands as b", { brand: "b.id" })
-      .where("category_slug", category_slug)
       .groupBy("brand_name");
 
-    const resultTypes = knex("products as p")
+    let resultTypes = knex("products as p")
       .select("t.name as type_name", knex.raw("count(t.id) as typeCount"))
       .join("categories_products__products_categories as cp", {
         "cp.product_id": "p.id",
@@ -35,10 +34,9 @@ module.exports = {
         "pt.product_id": "p.id",
       })
       .leftJoin("types as t", { type_id: "t.id" })
-      .where("category_slug", category_slug)
       .groupBy("type_name");
 
-    const resultTags = knex("products as p")
+    let resultTags = knex("products as p")
       .select("tg.name as tag_name", knex.raw("count(tg.id) as tagCount"))
       .join("categories_products__products_categories as cp", {
         "cp.product_id": "p.id",
@@ -48,11 +46,30 @@ module.exports = {
         "ptg.product_id": "p.id",
       })
       .leftJoin("tags as tg", { tag_id: "tg.id" })
-      .where("category_slug", category_slug)
       .groupBy("tag_name");
 
-    const result = await Promise.all([resultBrands, resultTypes, resultTags]);
-    console.log("result :>> ", result);
+    let totalLength = knex("products as p")
+      .count("* as totalLength")
+      .join("categories_products__products_categories as cp", {
+        "cp.product_id": "p.id",
+      })
+      .join("categories as c", { category_id: "c.id" });
+
+    if (category_slug && category_slug != "undefined") {
+      // null string pass from api = undefined string
+      resultBrands.where("category_slug", category_slug);
+      resultTypes.where("category_slug", category_slug);
+      resultTags.where("category_slug", category_slug);
+      totalLength.where("category_slug", category_slug);
+    }
+
+    const result = await Promise.all([
+      resultBrands,
+      resultTypes,
+      resultTags,
+      totalLength,
+    ]);
+
     return result;
   },
   async showFiltered(ctx) {
@@ -76,8 +93,6 @@ module.exports = {
       offset,
       sortBys,
     } = ctx.request.query;
-    console.log("ctx.request.query :>> ", ctx.request.query);
-    console.log("hit sortBys :>> ", sortBys);
 
     const queryBuilder = knex("products as p")
       .select(
@@ -111,11 +126,13 @@ module.exports = {
       .leftJoin("tags as tg", { tag_id: "tg.id" })
       .leftJoin("upload_file_morph as ufm", { "p.id": "ufm.related_id" })
       .leftJoin("upload_file as up", { upload_file_id: "up.id" })
-      .where("category_slug", category_slug)
       .groupBy("productID")
       .orderBy(`${sortBys[0]}`, `${sortBys[1]}`)
       .limit(+limit)
       .offset(+offset);
+
+    if (category_slug && category_slug != "undefined")
+      queryBuilder.where("category_slug", category_slug);
 
     const activeValues = [brands, types, tags].filter(
       (value) => !!value != false
@@ -164,11 +181,6 @@ module.exports = {
       if (!Array.isArray(tags)) tags = [tags];
       queryBuilder.whereIn("tg.name", tags);
     }
-
-    // queryBuilder.then((result) => {
-    //   console.log(JSON.parse(JSON.stringify(result)));
-    //   console.log("hiiiiti");
-    // });
 
     return queryBuilder.then((result) => result);
   },
