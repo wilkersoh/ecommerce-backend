@@ -30,6 +30,7 @@ const setCookies = function (ctx, token) {
     const viewToken = crypto.randomBytes(20).toString("hex");
 
     ctx.cookies.set("viewToken", viewToken, {
+      httpOnly: false,
       // secure: process.env.NODE_ENV != "development" ? true : false,
       maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
       domain:

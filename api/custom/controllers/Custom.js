@@ -13,6 +13,7 @@ module.exports = {
 
     ctx.cookies.set("viewToken", null, {
       // secure: process.env.NODE_ENV != "development" ? true : false,
+      httpOnly: false,
       sameSite: "lax",
       maxAge: 0,
       domain:
