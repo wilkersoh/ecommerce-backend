@@ -31,7 +31,7 @@ const setCookies = function (ctx, token) {
 
     ctx.cookies.set("viewToken", viewToken, {
       httpOnly: false,
-      // secure: process.env.NODE_ENV != "development" ? true : false,
+      secure: false,
       maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
       domain:
         process.env.NODE_ENV != "development" ? "selfpaths.com" : "localhost",
