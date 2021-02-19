@@ -30,9 +30,10 @@ const setCookies = function (ctx, token) {
     const viewToken = crypto.randomBytes(20).toString("hex");
 
     ctx.cookies.set("viewToken", viewToken, {
-      httpOnly: false,
-      secure: process.env.NODE_ENV != "development" ? true : false,
+      // secure: process.env.NODE_ENV != "development" ? true : false,
       maxAge: 1000 * 60 * 60 * 24 * 14, // 14 Day Age
+      domain:
+        process.env.NODE_ENV != "development" ? "selfpaths.com" : "localhost",
     });
   } catch (error) {
     console.log(error);
@@ -567,9 +568,9 @@ module.exports = {
     } catch (err) {
       const adminError = _.includes(err.message, "username")
         ? {
-          id: "Auth.form.error.username.taken",
-          message: "Username already taken",
-        }
+            id: "Auth.form.error.username.taken",
+            message: "Username already taken",
+          }
         : { id: "Auth.form.error.email.taken", message: "Email already taken" };
 
       ctx.badRequest(null, formatError(adminError));
