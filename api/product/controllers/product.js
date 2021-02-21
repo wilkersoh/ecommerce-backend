@@ -14,7 +14,7 @@ module.exports = {
   async getFilterList(ctx) {
     const knex = strapi.connections.default;
     const { category_slug } = ctx.request.query;
-    console.log("category_slug :>> ", category_slug);
+
     let resultBrands = knex("products as p")
       .select("b.name as brand_name", knex.raw("count(b.id) as brandCount"))
       .join("categories_products__products_categories as cp", {
@@ -101,12 +101,7 @@ module.exports = {
         "p.product_slug as product_slug",
         "p.quantity_in_store as quantity_in_store",
         "p.price as price",
-        // "c.name as category_name",
-        // "c.category_slug as category_slug",
         "b.name as brand_name",
-        // knex.raw(
-        //   "GROUP_CONCAT(DISTINCT up.url) as images, GROUP_CONCAT(DISTINCT tg.name) as tag_names, GROUP_CONCAT(DISTINCT t.name) as type_names"
-        // )
         knex.raw(
           "GROUP_CONCAT(DISTINCT up.url) as images, GROUP_CONCAT(DISTINCT tg.name) as tag_names, GROUP_CONCAT(DISTINCT t.name) as type_names, GROUP_CONCAT(DISTINCT c.name) as category_names"
         )
@@ -144,24 +139,34 @@ module.exports = {
       if (!Array.isArray(tags) && !!tags != false) tags = [tags];
 
       // STUPID WAY
-      if (brands && types && tags)
-        queryBuilder
-          .whereIn("b.name", brands)
-          .orWhereIn("t.name", types)
-          .orWhereIn("tg.name", tags); // 這個還是有一點問題 他也會把不是category_slug的放進來： ?category_slug=stationery-stamp-ink&types=Sticky Notes&tags=Cutest&brands=YZ 創意文創
+      if (brands && types && tags) {
+        // queryBuilder.whereIn("b.name", brands).orWhereIn("t.name", types);
+        queryBuilder.andWhere(function (query) {
+          query.orWhereIn("b.name", brands);
+          query.orWhereIn("t.name", types);
+          query.orWhereIn("tg.name", tags);
+        });
+        return queryBuilder.then((result) => result);
+      }
 
       if (brands && types) {
-        queryBuilder.whereIn("b.name", brands).orWhereIn("t.name", types);
+        queryBuilder.andWhere(function (query) {
+          query.orWhereIn("b.name", brands);
+          query.orWhereIn("t.name", types);
+        });
       }
       if (brands && tags) {
-        queryBuilder.whereIn("b.name", brands).orWhereIn("tg.name", tags);
+        queryBuilder.andWhere(function (query) {
+          query.orWhereIn("b.name", brands);
+          query.orWhereIn("tg.name", tags);
+        });
       }
 
       if (types && tags) {
-        queryBuilder.whereIn("t.name", types).orWhereIn("tg.name", tags);
-      }
-      if (types && brands) {
-        queryBuilder.whereIn("t.name", types).orWhereIn("b.name", brands);
+        queryBuilder.andWhere(function (query) {
+          query.orWhereIn("t.name", types);
+          query.orWhereIn("tg.name", tags);
+        });
       }
 
       return queryBuilder.then((result) => result);
