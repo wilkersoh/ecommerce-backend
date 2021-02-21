@@ -33,6 +33,17 @@
     },
     "contact_number": {
       "type": "integer"
+    },
+    "facebook_image": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ],
+      "plugin": "upload",
+      "required": false
     }
   }
 }

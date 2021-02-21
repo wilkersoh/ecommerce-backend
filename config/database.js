@@ -1,8 +1,6 @@
 const password =
   process.env.NODE_ENV === "development" ? "password" : "Selfpaths@password123";
 
-console.log("passworod env.Node_Env: ", password, process.env.NODE_ENV);
-
 module.exports = ({ env }) => ({
   defaultConnection: "default",
   connections: {
