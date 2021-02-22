@@ -17,19 +17,11 @@ module.exports = {
 
     let resultBrands = knex("products as p")
       .select("b.name as brand_name", knex.raw("count(b.id) as brandCount"))
-      .join("categories_products__products_categories as cp", {
-        "cp.product_id": "p.id",
-      })
-      .join("categories as c", { category_id: "c.id" })
       .leftJoin("brands as b", { brand: "b.id" })
       .groupBy("brand_name");
 
     let resultTypes = knex("products as p")
       .select("t.name as type_name", knex.raw("count(t.id) as typeCount"))
-      .join("categories_products__products_categories as cp", {
-        "cp.product_id": "p.id",
-      })
-      .join("categories as c", { category_id: "c.id" })
       .leftJoin("products_types__types_products as pt", {
         "pt.product_id": "p.id",
       })
@@ -38,16 +30,13 @@ module.exports = {
 
     let resultTags = knex("products as p")
       .select("tg.name as tag_name", knex.raw("count(tg.id) as tagCount"))
-      .join("categories_products__products_categories as cp", {
-        "cp.product_id": "p.id",
-      })
-      .join("categories as c", { category_id: "c.id" })
       .leftJoin("products_tags__tags_products as ptg", {
         "ptg.product_id": "p.id",
       })
       .leftJoin("tags as tg", { tag_id: "tg.id" })
       .groupBy("tag_name");
 
+    // inital lengths
     let totalLength = knex("products as p")
       .count("* as totalLength")
       .join("categories_products__products_categories as cp", {
@@ -57,9 +46,15 @@ module.exports = {
 
     if (category_slug && category_slug != "undefined") {
       // null string pass from api = undefined string
-      resultBrands.where("category_slug", category_slug);
-      resultTypes.where("category_slug", category_slug);
-      resultTags.where("category_slug", category_slug);
+      [resultBrands, resultTypes, resultTags].forEach((result) => {
+        return result
+          .join("categories_products__products_categories as cp", {
+            "cp.product_id": "p.id",
+          })
+          .join("categories as c", { category_id: "c.id" })
+          .where("category_slug", category_slug);
+      });
+
       totalLength.where("category_slug", category_slug);
     }
 
@@ -133,41 +128,45 @@ module.exports = {
       (value) => !!value != false
     );
 
+    // STUPID WAY
     if (activeValues.length >= 2) {
       if (!Array.isArray(brands) && !!brands != false) brands = [brands];
       if (!Array.isArray(types) && !!types != false) types = [types];
       if (!Array.isArray(tags) && !!tags != false) tags = [tags];
 
-      // STUPID WAY
       if (brands && types && tags) {
-        // queryBuilder.whereIn("b.name", brands).orWhereIn("t.name", types);
-        queryBuilder.andWhere(function (query) {
-          query.orWhereIn("b.name", brands);
-          query.orWhereIn("t.name", types);
-          query.orWhereIn("tg.name", tags);
+        queryBuilder.andWhere(function (builder) {
+          builder
+            .orWhereIn("b.name", brands)
+            .orWhereIn("t.name", types)
+            .orWhereIn("tg.name", tags);
         });
         return queryBuilder.then((result) => result);
       }
 
       if (brands && types) {
-        queryBuilder.andWhere(function (query) {
-          query.orWhereIn("b.name", brands);
-          query.orWhereIn("t.name", types);
+        queryBuilder.andWhere(function (builder) {
+          builder.orWhereIn("b.name", brands).orWhereIn("t.name", types);
         });
       }
       if (brands && tags) {
-        queryBuilder.andWhere(function (query) {
-          query.orWhereIn("b.name", brands);
-          query.orWhereIn("tg.name", tags);
+        queryBuilder.andWhere(function (builder) {
+          builder.orWhereIn("b.name", brands).orWhereIn("tg.name", tags);
         });
       }
 
       if (types && tags) {
-        queryBuilder.andWhere(function (query) {
-          query.orWhereIn("t.name", types);
-          query.orWhereIn("tg.name", tags);
+        queryBuilder.andWhere(function (builder) {
+          builder.orWhereIn("t.name", types).orWhereIn("tg.name", tags);
         });
       }
+
+      // let totalLength = knex("products as p")
+      //   .count("* as totalLength")
+      //   .join("categories_products__products_categories as cp", {
+      //     "cp.product_id": "p.id",
+      //   })
+      //   .join("categories as c", { category_id: "c.id" });
 
       return queryBuilder.then((result) => result);
     }

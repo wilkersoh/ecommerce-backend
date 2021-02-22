@@ -11,13 +11,14 @@ module.exports = {
         "p.name as productName",
         "p.price as price",
         "p.content as content",
+        "p.product_slug as product_slug",
         knex.raw("GROUP_CONCAT(DISTINCT uf.url) as images")
       )
       .join("upload_file_morph as ufm", "p.id", "ufm.related_id")
       .leftJoin("upload_file as uf", "ufm.upload_file_id", "uf.id")
       .where("p.name", "like", `%${value}%`)
       .groupBy("productID")
-      .limit(2)
+      .limit(5)
       .offset(+offset);
 
     const resultCount = knex("products as p")
