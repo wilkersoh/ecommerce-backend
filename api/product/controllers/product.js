@@ -121,6 +121,7 @@ module.exports = {
       .limit(+limit)
       .offset(+offset);
 
+    // Except /products/all
     if (category_slug && category_slug != "undefined")
       queryBuilder.where("category_slug", category_slug);
 
