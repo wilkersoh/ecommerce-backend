@@ -36,14 +36,6 @@ module.exports = {
       .leftJoin("tags as tg", { tag_id: "tg.id" })
       .groupBy("tag_name");
 
-    // inital lengths
-    let totalLength = knex("products as p")
-      .count("* as totalLength")
-      .join("categories_products__products_categories as cp", {
-        "cp.product_id": "p.id",
-      })
-      .join("categories as c", { category_id: "c.id" });
-
     if (category_slug && category_slug != "undefined") {
       // null string pass from api = undefined string
       [resultBrands, resultTypes, resultTags].forEach((result) => {
@@ -55,15 +47,10 @@ module.exports = {
           .where("category_slug", category_slug);
       });
 
-      totalLength.where("category_slug", category_slug);
+      // totalLength.where("category_slug", category_slug);
     }
 
-    const result = await Promise.all([
-      resultBrands,
-      resultTypes,
-      resultTags,
-      totalLength,
-    ]);
+    const result = await Promise.all([resultBrands, resultTypes, resultTags]);
 
     return result;
   },
