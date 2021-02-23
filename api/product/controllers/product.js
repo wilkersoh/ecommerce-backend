@@ -135,6 +135,28 @@ module.exports = {
       if (!Array.isArray(types) && !!types != false) types = [types];
       if (!Array.isArray(tags) && !!tags != false) tags = [tags];
 
+      const totalLengthBuilder = knex("products as p")
+        .countDistinct("p.name as totalLength")
+        .join("categories_products__products_categories as cp", {
+          "cp.product_id": "p.id",
+        })
+        .join("categories as c", { category_id: "c.id" })
+        .leftJoin("brands as b", { brand: "b.id" })
+        .leftJoin("products_types__types_products as pt", {
+          "pt.product_id": "p.id",
+        })
+        .leftJoin("types as t", { type_id: "t.id" })
+        .leftJoin("products_tags__tags_products as ptg", {
+          "ptg.product_id": "p.id",
+        })
+        .leftJoin("tags as tg", { tag_id: "tg.id" })
+        .where("category_slug", category_slug)
+        .andWhere((builder) => {
+          if (brands) builder.orWhereIn("b.name", brands);
+          if (types) builder.orWhereIn("t.name", types);
+          if (tags) builder.orWhereIn("tg.name", tags);
+        });
+
       if (brands && types && tags) {
         queryBuilder.andWhere(function (builder) {
           builder
@@ -142,7 +164,10 @@ module.exports = {
             .orWhereIn("t.name", types)
             .orWhereIn("tg.name", tags);
         });
-        return queryBuilder.then((result) => result);
+
+        const result = await Promise.all([queryBuilder, totalLengthBuilder]);
+
+        return result;
       }
 
       if (brands && types) {
@@ -150,6 +175,7 @@ module.exports = {
           builder.orWhereIn("b.name", brands).orWhereIn("t.name", types);
         });
       }
+
       if (brands && tags) {
         queryBuilder.andWhere(function (builder) {
           builder.orWhereIn("b.name", brands).orWhereIn("tg.name", tags);
@@ -161,16 +187,34 @@ module.exports = {
           builder.orWhereIn("t.name", types).orWhereIn("tg.name", tags);
         });
       }
+      const result = await Promise.all([queryBuilder, totalLengthBuilder]);
 
-      // let totalLength = knex("products as p")
-      //   .count("* as totalLength")
-      //   .join("categories_products__products_categories as cp", {
-      //     "cp.product_id": "p.id",
-      //   })
-      //   .join("categories as c", { category_id: "c.id" });
-
-      return queryBuilder.then((result) => result);
+      return result;
     }
+
+    const totalLengthBuilder = knex("products as p")
+      .countDistinct("p.name as totalLength")
+      .join("categories_products__products_categories as cp", {
+        "cp.product_id": "p.id",
+      })
+      .join("categories as c", { category_id: "c.id" })
+      .leftJoin("brands as b", { brand: "b.id" })
+      .leftJoin("products_types__types_products as pt", {
+        "pt.product_id": "p.id",
+      })
+      .leftJoin("types as t", { type_id: "t.id" })
+      .leftJoin("products_tags__tags_products as ptg", {
+        "ptg.product_id": "p.id",
+      })
+      .leftJoin("tags as tg", { tag_id: "tg.id" })
+      .andWhere((builder) => {
+        if (brands) builder.orWhere("b.name", brands);
+        if (types) builder.orWhere("t.name", types);
+        if (tags) builder.orWhere("tg.name", tags);
+      });
+
+    if (category_slug && category_slug != "undefined")
+      totalLengthBuilder.where("category_slug", category_slug);
 
     if (types) {
       if (!Array.isArray(types)) types = [types];
@@ -187,6 +231,7 @@ module.exports = {
       queryBuilder.whereIn("tg.name", tags);
     }
 
-    return queryBuilder.then((result) => result);
+    const result = await Promise.all([queryBuilder, totalLengthBuilder]);
+    return result;
   },
 };
