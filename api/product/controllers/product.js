@@ -192,27 +192,6 @@ module.exports = {
       return result;
     }
 
-    // const totalLengthBuilder = knex("products as p")
-    //   .countDistinct("p.name as totalLength")
-    //   .join("categories_products__products_categories as cp", {
-    //     "cp.product_id": "p.id",
-    //   })
-    //   .join("categories as c", { category_id: "c.id" })
-    //   .leftJoin("brands as b", { brand: "b.id" })
-    //   .leftJoin("products_types__types_products as pt", {
-    //     "pt.product_id": "p.id",
-    //   })
-    //   .leftJoin("types as t", { type_id: "t.id" })
-    //   .leftJoin("products_tags__tags_products as ptg", {
-    //     "ptg.product_id": "p.id",
-    //   })
-    //   .leftJoin("tags as tg", { tag_id: "tg.id" })
-    //   .andWhere((builder) => {
-    //     if (brands) builder.orWhere("b.name", brands);
-    //     if (types) builder.orWhere("t.name", types);
-    //     if (tags) builder.orWhere("tg.name", tags);
-    //   });
-
     if (types) {
       if (!Array.isArray(types)) types = [types];
       queryBuilder.whereIn("t.name", types);
