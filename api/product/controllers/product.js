@@ -46,8 +46,6 @@ module.exports = {
           .join("categories as c", { category_id: "c.id" })
           .where("category_slug", category_slug);
       });
-
-      // totalLength.where("category_slug", category_slug);
     }
 
     const result = await Promise.all([resultBrands, resultTypes, resultTags]);
