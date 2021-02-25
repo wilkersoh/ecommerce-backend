@@ -1,8 +1,10 @@
 module.exports = ({ env }) => ({
   host: env("HOST", "0.0.0.0"),
   port: env.int("PORT", 1337),
-  // url: "https://ecommerce-frontend.staging.selfpaths.com",
-  url: "http://localhost:1337",
+  url:
+    process.env.NODE_ENV != "development"
+      ? "https://ecommerce-backend.staging.selfpaths.com"
+      : "http://localhost:1337",
   proxy: true,
   admin: {
     auth: {
