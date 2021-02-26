@@ -14,10 +14,12 @@ module.exports = {
     strapi.log.debug(`Trying to send an email to ${sendTo}`);
     console.log("hit here");
     try {
+      // This not be use. We use strapi provide. And sendInBlue.
       const emailOptions = {
         to: sendTo,
-        subject: "This is a test",
-        html: "<h1>Welcome!</h1><p>This is a test HTML email.</p>",
+        subject: "Confimation from Creative • 文创!",
+        html:
+          "<h1>Creative • 文创!</h1><div><p>This is a test HTML email.</p></div>",
       };
       await strapi.plugins["email"].services.email.send(emailOptions);
       strapi.log.debug(`Email sent to ${sendTo}`);
