@@ -1,51 +1,53 @@
-"use strict";
-const crypto = require("crypto");
+// 突然出現 但是 production 已經是能send email的 沒有這個
 
-const { sanitizeEntity, getAbsoluteServerUrl } = require("strapi-utils");
+// "use strict";
+// const crypto = require("crypto");
 
-module.exports = {
-  async sendConfirmationEmail(user) {
-    const userPermissionService =
-      strapi.plugins["users-permissions"].services.userspermissions;
-    const pluginStore = await strapi.store({
-      environment: "",
-      type: "plugin",
-      name: "users-permissions",
-    });
+// const { sanitizeEntity, getAbsoluteServerUrl } = require("strapi-utils");
 
-    const settings = await pluginStore
-      .get({ key: "email" })
-      .then((storeEmail) => storeEmail["email_confirmation"].options);
+// module.exports = {
+//   async sendConfirmationEmail(user) {
+//     const userPermissionService =
+//       strapi.plugins["users-permissions"].services.userspermissions;
+//     const pluginStore = await strapi.store({
+//       environment: "",
+//       type: "plugin",
+//       name: "users-permissions",
+//     });
 
-    const userInfo = sanitizeEntity(user, {
-      model: strapi.query("user", "users-permissions").model,
-    });
+//     const settings = await pluginStore
+//       .get({ key: "email" })
+//       .then((storeEmail) => storeEmail["email_confirmation"].options);
 
-    const confirmationToken = crypto.randomBytes(20).toString("hex");
+//     const userInfo = sanitizeEntity(user, {
+//       model: strapi.query("user", "users-permissions").model,
+//     });
 
-    await this.edit({ id: user.id }, { confirmationToken });
+//     const confirmationToken = crypto.randomBytes(20).toString("hex");
 
-    settings.message = await userPermissionService.template(settings.message, {
-      URL: `${getAbsoluteServerUrl(strapi.config)}/auth/email-confirmation`,
-      USER: userInfo,
-      CODE: confirmationToken,
-    });
+//     await this.edit({ id: user.id }, { confirmationToken });
 
-    settings.object = await userPermissionService.template(settings.object, {
-      USER: userInfo,
-    });
+//     settings.message = await userPermissionService.template(settings.message, {
+//       URL: `${getAbsoluteServerUrl(strapi.config)}/auth/email-confirmation`,
+//       USER: userInfo,
+//       CODE: confirmationToken,
+//     });
 
-    // Send an email to the user.
-    await strapi.plugins["email"].services.email.send({
-      to: user.email,
-      from:
-        settings.from.email && settings.from.name
-          ? `${settings.from.name} <${settings.from.email}>`
-          : undefined,
-      replyTo: settings.response_email,
-      subject: settings.object,
-      text: settings.message,
-      html: settings.message,
-    });
-  },
-};
+//     settings.object = await userPermissionService.template(settings.object, {
+//       USER: userInfo,
+//     });
+
+//     // Send an email to the user.
+//     await strapi.plugins["email"].services.email.send({
+//       to: user.email,
+//       from:
+//         settings.from.email && settings.from.name
+//           ? `${settings.from.name} <${settings.from.email}>`
+//           : undefined,
+//       replyTo: settings.response_email,
+//       subject: settings.object,
+//       text: settings.message,
+//       html: settings.message,
+//     });
+//   },
+// };
