@@ -3,6 +3,8 @@
 
 Update to Server
 1. yarn build (we build in local)!!
+2. selfpaths - git pull origin master
+3. selfpaths - pm2 restart 3
 
 How to update in digitalOcean server
 [tutorial](https://strapi.io/documentation/developer-docs/latest/setup-deployment-guides/deployment/hosting-guides/digitalocean.html)
