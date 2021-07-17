@@ -1,6 +1,9 @@
 1. yarn install
 2. yarn dev
 
+Update to Server
+1. yarn build (we build in local)!!
+
 How to update in digitalOcean server
 [tutorial](https://strapi.io/documentation/developer-docs/latest/setup-deployment-guides/deployment/hosting-guides/digitalocean.html)
 1. Go to Server
