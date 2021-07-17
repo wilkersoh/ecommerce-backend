@@ -1,3 +1,14 @@
+1. yarn install
+2. yarn dev
+
+How to update in digitalOcean server
+[tutorial](https://strapi.io/documentation/developer-docs/latest/setup-deployment-guides/deployment/hosting-guides/digitalocean.html)
+1. Go to Server
+2. sudo ufw allow 1337/tcp
+3. sudo ufw enable , y
+4. cd /var/www/eccxxx-backend
+5. pm2 start ecosystem.config.js
+
 # Strapi application
 > npx create-strapi-app project-name --quickstart
 > yarn add strapi-plugin-magic
@@ -51,8 +62,8 @@ order controller, let user only retrieve their order record only.
 }
 ```
 
-password: Password@123
-
+strapi email: devyz0517@gmail.com
+strapi password: Password@123
 
 
 How i started from:
